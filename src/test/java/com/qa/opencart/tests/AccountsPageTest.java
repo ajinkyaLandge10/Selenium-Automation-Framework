@@ -7,6 +7,10 @@ import org.testng.annotations.Test;
 import com.qa.opencart.base.BaseTest;
 import com.qa.opencart.constants.AppConstants;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+
 public class AccountsPageTest extends BaseTest {
 
 	@BeforeClass
@@ -14,11 +18,15 @@ public class AccountsPageTest extends BaseTest {
 		accPage = loginPage.doLogin(prop.getProperty("username"), prop.getProperty("password"));
 	}
 	
+	@Description("Accounts Page Title Test....")
+	@Severity(SeverityLevel.MINOR)
 	@Test
 	public void accPageTitleTest() {
 		Assert.assertEquals(accPage.getAccPageTitle(), AppConstants.ACCOUNTS_PAGE_TITLE);
 	}
 	
+	@Description("Accounts Page URL Test....")
+	@Severity(SeverityLevel.NORMAL)
 	@Test
 	public void accPageURLTest() {
 		Assert.assertTrue(accPage.getAccPageURL().contains(AppConstants.ACCOUNTS_PAGE_URL_FRACTION));
