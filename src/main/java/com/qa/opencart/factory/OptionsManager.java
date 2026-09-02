@@ -21,6 +21,7 @@ public class OptionsManager {
 		co = new ChromeOptions();
 		if(Boolean.parseBoolean(prop.getProperty("headless").trim())) co.addArguments("--headless");
 		if(Boolean.parseBoolean(prop.getProperty("incognito").trim())) co.addArguments("--incognito");
+		if(Boolean.parseBoolean(prop.getProperty("remote"))) co.setCapability("browserName", "chrome");
 		return co;
 	}
 	
