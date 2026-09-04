@@ -7,6 +7,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -25,6 +27,7 @@ public class DriverFactory {
 	Properties prop;
 	OptionsManager optionsManager;
 	public static ThreadLocal<WebDriver> tlDriver = new ThreadLocal<WebDriver>();
+	private static final Logger log = LogManager.getLogger(DriverFactory.class);
 	public static String highlight = null;
 
 	public WebDriver initDriver(Properties prop) {
@@ -32,8 +35,9 @@ public class DriverFactory {
 		String browserName = prop.getProperty("browser");
 //		String browserName = System.getProperty("browser"); // helps when we run from CMD by using Maven commands
 
-		System.out.println("Browser Name is : " + browserName);
-
+//		System.out.println("Browser Name is : " + browserName);
+		log.info("Browser Name is : " + browserName);
+		
 		highlight = prop.getProperty("highlight");
 
 		optionsManager = new OptionsManager(prop);
@@ -41,9 +45,11 @@ public class DriverFactory {
 		switch (browserName.toLowerCase().trim()) {
 		case "chrome":
 			if (Boolean.parseBoolean(prop.getProperty("remote"))) {
+				log.info("Running on Remote Machine");
 				// Run it On Grid
 				initRemoteDriver(browserName);
 			} else {
+				log.info("Running on Local Machine");
 				// Run it on Local
 				// driver = new ChromeDriver(optionsManager.getChromeOptions());
 				tlDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
@@ -78,7 +84,8 @@ public class DriverFactory {
 			break;
 
 		default:
-			System.out.println("Please Pass The Right Browser Name... " + browserName);
+			//System.out.println("Please Pass The Right Browser Name... " + browserName);
+			log.warn("Please Pass The Right Browser Name... " + browserName);
 			throw new FrameworkException("No Browser Found....");
 
 		}
@@ -136,13 +143,16 @@ public class DriverFactory {
 		prop = new Properties();
 
 		String envName = System.getProperty("env");
-		System.out.println("Environment Name Is : " + envName);
+		//System.out.println("Environment Name Is : " + envName);
+		log.info("Environment Name Is : " + envName);
 
 		try {
 			if (envName == null) {
-				System.out.println("Your Environment is Null ...So Running Tests On QA Environment");
+				//System.out.println("Your Environment is Null ...So Running Tests On QA Environment");
+				log.warn("Your Environment is Null ...So Running Tests On QA Environment");
 				ip = new FileInputStream("./src/test/resources/config/config.qa.properties");
-			} else {
+			} 
+			else {
 				switch (envName.toLowerCase().trim()) {
 				case "qa":
 					ip = new FileInputStream("./src/test/resources/config/config.qa.properties");
@@ -159,6 +169,7 @@ public class DriverFactory {
 
 				default:
 					System.out.println("Please Pass The Right Environment Name... " + envName);
+					log.error("Wrong Environment Name : " + envName);
 					throw new FrameworkException("Wrong Environment Name..." + envName);
 				}
 			}
@@ -169,6 +180,7 @@ public class DriverFactory {
 
 		try {
 			prop.load(ip);
+			log.info(prop);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,7 @@
 package com.qa.opencart.pages;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import com.qa.opencart.constants.AppConstants;
@@ -11,6 +13,7 @@ public class LoginPage {
 	
 	private WebDriver driver;
 	private ElementUtil eleUtil;
+	private static final Logger log = LogManager.getLogger(LoginPage.class);
 
 	// By locators or Page Object Repository:
 	private By userName = By.id("input-email");
@@ -31,14 +34,16 @@ public class LoginPage {
 	@Step("Getting Login Page Title")
 	public String getLoginPageTitle() {
 		String title = eleUtil.waitForTitleIs(AppConstants.LOGIN_PAGE_TITLE, AppConstants.SHORT_DEFAULT_WAIT);
-		System.out.println("Login page Title : " + title);
+		//System.out.println("Login page Title : " + title);
+		log.info("Login page Title : " + title);
 		return title;
 	}
 
 	@Step("Getting Login Page URL")
 	public String getLoginPageURL() {	
 		String url = eleUtil.waitForURLContains(AppConstants.LOGIN_PAGE_URL_FRACTION, AppConstants.SHORT_DEFAULT_WAIT);
-		System.out.println("Login page URL : " + url);
+		//System.out.println("Login page URL : " + url);
+		log.info("Login page URL : " + url);
 		return url;
 	}
 
@@ -54,7 +59,8 @@ public class LoginPage {
 
 	@Step("UserName : {0} & Password : {1}")
 	public AccountsPage doLogin(String username, String pwd) {
-		System.out.println("Credentials are : " + username + " : " + pwd);
+		//System.out.println("Credentials are : " + username + " : " + pwd);
+		log.info("Credentials are : " + username + " : " + pwd);
 		eleUtil.waitForVisibilityOfElement(userName, AppConstants.MEDIUM_DEFAULT_WAIT).sendKeys(username);
 		eleUtil.doActionsSendKeys(password, pwd);
 		eleUtil.doClick(loginBtn);
